@@ -1,0 +1,995 @@
+
+#include<stdio.h>
+#include<conio.h>
+#include<fstream.h>
+#include<string.h>
+#include<process.h>
+#include<graphics.h>
+void welcome();
+void searchname();
+void insert();
+int get_id();
+void dispadd();
+void disppost();
+void searchtelno();
+void searchhno();
+void searchlocality();
+void searchcity();
+void searchstate();
+void searchpost();
+void update();
+class phonebook
+{
+char name[15],pass[20],phno1[11],phno2[11],hno[5],locality[14],city[5],state[5],post1[10],post2[10],post3[10];
+int id;
+public:
+void getdata(int);
+void showdata(int);
+void showpost(int);
+char *getname()
+{
+return name;
+}
+char *getphno1()
+{
+return phno1;
+}
+char *getphno2()
+{
+return phno2;
+}
+char *gethno()
+{
+return hno;
+}
+char *getlocality()
+{
+return locality;
+}
+char *getcity()
+{
+return city;
+}
+char *getstate()
+{
+return state;
+}
+char *getpost1()
+{
+return post1;
+}
+char *getpost2()
+{
+return post2;
+}
+char *getpost3()
+{
+return post3;
+}
+int getid()
+{
+return id;
+}
+char *getpass()
+{
+return pass;
+}
+
+void update(char *nm,char *telno,char *telno2)
+{
+strcpy(name,nm);
+strcpy(phno1,telno);
+strcpy(phno2,telno2);
+}
+};
+
+
+void phonebook::getdata(int a)
+{
+id=a;
+textbackground(RED);
+textcolor(GREEN);
+clrscr();
+
+cout<<"\nEnter Name";
+gets(name);
+cout<<"\nEnter Phone no1";
+gets(phno1);
+cout<<"\nEnter Phone no2(if any&ifnot press enter to abort)";
+gets(phno2);
+cout<<"\nEnter House no";
+gets(hno);
+cout<<"\nEnter locality";
+gets(locality);
+cout<<"\nEnter city(short form)";
+gets(city);
+cout<<"\nEnter state(short form)";
+gets(state);
+cout<<"\nEnter occupation";
+cout<<"\nEnter post1";
+gets(post1);
+cout<<"\nEnter post2";
+gets(post2);
+cout<<"\nEnter post3";
+gets(post3);
+cout<<"\n Enter password";
+gets(pass);
+}
+
+void phonebook::showdata(int r)
+{
+gotoxy(2,r);
+cout<<id;
+gotoxy(5,r);
+cout<<name;
+gotoxy(28,r);
+cout<<phno1;
+gotoxy(40,r);
+cout<<phno2;
+gotoxy(52,r);
+cout<<hno;
+cout<<" "<<locality;
+cout<<" "<<city;
+cout<<" "<<state;
+}
+void phonebook::showpost(int r)
+{
+gotoxy(2,r);
+cout<<id;
+gotoxy(5,r);
+cout<<name;
+gotoxy(28,r);
+cout<<phno1;
+gotoxy(40,r);
+cout<<phno2;
+gotoxy(52,r);
+cout<<post1;
+cout<<" "<<post2;
+cout<<" "<<post3;
+}
+
+phonebook rec;
+
+
+void main()
+{
+int choice;
+welcome();
+while(1)
+{
+textbackground(BLUE);
+textcolor(RED);
+clrscr();
+cout<<"\n\t\t\t*****PHONE BOOK*****";
+cout<<"\n1.Add new record";
+cout<<"\n2.Display all records by Address";
+cout<<"\n3.Display all records by occupation";
+cout<<"\n4.Search Telephone No.";
+cout<<"\n5.Search Person Name";
+cout<<"\n6.Search By House No.";
+cout<<"\n7.Search By Locality";
+cout<<"\n8.Search By City";
+cout<<"\n9.Search By State";
+cout<<"\n10.Search By Occupation";
+cout<<"\n11.Update Telephone No";
+cout<<"\n12.Exit";
+cout<<"\nEnter your choice";
+cin>>choice;
+switch(choice)
+{
+case 1:insert();break;
+case 2:dispadd();break;
+case 3:disppost();break;
+case 4:searchtelno();break;
+case 5:searchname();break;
+case 6:searchhno();break;
+case 7:searchlocality();break;
+case 8:searchcity();break;
+case 9:searchstate();break;
+case 10:searchpost();break;
+case 11:update();break;
+case 12:exit(0);
+default :cout<<"invalid choice";
+}
+getch();
+}
+}
+int get_id()
+{
+phonebook ob;
+int id;
+fstream file("phone.dat",ios::in|ios::binary);
+if(!file)
+id=1;
+else
+{
+while(1)
+{
+file.read((char *)&ob,sizeof(ob));
+if(file.eof())
+break;
+}
+getch();
+id=ob.getid()+1;
+}
+file.close();
+return(id);
+}
+
+
+
+
+void insert()
+{ int a;
+a=get_id();
+fstream file;
+file.open("phone.dat",ios::app|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+rec.getdata(a);
+file.write((char*)&rec,sizeof(rec));
+file.close();
+}
+
+
+
+
+void dispadd()
+{
+int r;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+file.seekg(0,ios::beg);
+textbackground(BROWN);
+textcolor(WHITE);
+
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(2,4);
+cout<<"Id";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(52,4);
+cout<<"Address";
+r=6;
+while(1)
+{
+file.read((char*)&rec,sizeof(rec));
+if(file.eof())
+break;
+else
+{
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+textbackground(CYAN);
+textcolor(BLUE);
+
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(2,4);
+cout<<"Id";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+file.close();
+getch();
+}
+
+void disppost()
+{
+int r;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+file.seekg(0,ios::beg);
+textbackground(WHITE);
+textcolor(RED);
+
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(2,4);
+cout<<"Id";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(52,4);
+cout<<"Occupation";
+r=6;
+while(1)
+{
+file.read((char*)&rec,sizeof(rec));
+if(file.eof())
+break;
+else
+{
+rec.showpost(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+textbackground(YELLOW);
+textcolor(BLACK);
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(2,4);
+cout<<"Id";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(52,4);
+cout<<"Occupation";
+r=6;
+}
+}
+}
+file.close();
+getch();
+}
+
+void searchname()
+{
+int r;
+char nm[15];     int found=0;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+textbackground(BROWN);
+textcolor(WHITE);
+clrscr();
+cout<<"\n\nEnter Name";
+cin>>nm;
+file.seekg(0,ios::beg);
+textbackground(RED);
+textcolor(WHITE);
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+found=0;
+while(file.read((char*)&rec,sizeof(rec)))
+{
+if (strcmpi(nm,rec.getname())==0)
+{
+found=1;
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+file.close();
+textbackground(RED);
+textcolor(WHITE);
+getch();
+
+if(found==0)
+{
+cout<<"\n\nRecord not Found";
+}
+}
+
+
+void searchtelno()
+{
+int r;
+char telno[11]; int found=0;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+textbackground(WHITE);
+textcolor(RED);
+clrscr();
+
+cout<<"\n\nEnter Telephone No.";
+cin>>telno;
+file.seekg(0,ios::beg);
+clrscr();
+gotoxy(32,2);
+textbackground(RED);
+textcolor(WHITE);
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+
+found=0;
+while(file.read((char *)&rec,sizeof(rec)))
+{
+if((strcmp(telno,rec.getphno1())==0)||(strcmp(telno,rec.getphno2())==0))
+{
+found=1;
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Person+al Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+textbackground(RED);
+textcolor(WHITE);
+getch();
+
+
+file.close();
+if(found==0)
+{
+cout<<"\n record not found";
+}
+}
+
+
+
+
+void searchhno()
+{
+int r;
+char house[7];
+int found;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+cout<<"\n\nEnter House No";
+cin>>house;
+file.seekg(0,ios::beg);
+textbackground(YELLOW);
+textcolor(RED);
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+
+found=0;
+while(file.read((char*)&rec,sizeof(rec)))
+{if (strcmp(house,rec.gethno())==0)
+{found=1;
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+file.close();
+if(found==0)
+{
+textbackground(YELLOW);
+textcolor(RED);
+clrscr();
+cout<<"\n\nRecord not Found";
+getch();
+}
+}
+
+
+void searchlocality()
+{
+int r;
+char local[20];
+int found;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+cout<<"\n\nEnter Locality";
+cin>>local;
+file.seekg(0,ios::beg);
+textbackground(CYAN);
+textcolor(BLUE);
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+
+found=0;
+while(file.read((char*)&rec,sizeof(rec)))
+{if (strcmpi(local,rec.getlocality())==0)
+{found=1;
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+file.close();
+if(found==0)
+{textbackground(CYAN);
+textcolor(BLUE);
+clrscr();
+cout<<"\n\nRecord not Found";
+getch();
+}
+}
+void searchcity()
+{
+int r;
+char cit[15];
+int found;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+cout<<"\n\nEnter City";
+cin>>cit;
+textbackground(GREEN);
+textcolor(WHITE);
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+
+file.seekg(0,ios::beg);
+found=0;
+while(file.read((char*)&rec,sizeof(rec)))
+{if (strcmpi(cit,rec.getcity())==0)
+{found=1;
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+file.close();
+if(found==0)
+{textbackground(GREEN);
+textcolor(WHITE);
+clrscr();
+cout<<"\n\nRecord not Found";
+getch();
+}
+}
+void searchstate()
+{
+int r;
+char stat[12];
+int found;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+textbackground(WHITE);
+textcolor(GREEN);
+clrscr();
+
+cout<<"\n\nEnter State";
+cin>>stat;
+file.seekg(0,ios::beg);
+found=0;
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+
+while(file.read((char*)&rec,sizeof(rec)))
+{if (strcmpi(stat,rec.getstate())==0)
+{found=1;
+rec.showdata(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(54,4);
+cout<<"Address";
+r=6;
+}
+}
+}
+file.close();
+if(found==0)
+{textbackground(WHITE);
+textcolor(GREEN);
+clrscr();
+cout<<"\n\nRecord not Found";
+getch();
+}
+}
+
+void searchpost()
+{
+int r;
+char post[10]; int found=0;
+fstream file;
+file.open("phone.dat",ios::in|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}
+cout<<"\n\nEnter Occupation";
+cin>>post;
+file.seekg(0,ios::beg);
+textbackground(BLACK);
+textcolor(RED);
+clrscr();
+
+//clrscr();
+gotoxy(32,2);
+cout<<"Personal Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(52,4);
+cout<<"Occupation";
+r=6;
+
+found=0;
+while(file.read((char *)&rec,sizeof(rec)))
+{
+if((strcmp(post,rec.getpost1())==0)||(strcmp(post,rec.getpost2())==0)||(strcmp(post,rec.getpost3())==0))
+{
+found=1;
+rec.showpost(r);
+r++;
+if(r==29)
+{
+cout<<"\nPress Any Key to Continue";
+getch();
+clrscr();
+gotoxy(32,2);
+cout<<"Person+al Detail";
+gotoxy(32,3);
+cout<<"^^^^^^^^^^^^^^^";
+gotoxy(5,4);
+cout<<"Name";
+gotoxy(28,4);
+cout<<"Phone No.1";
+gotoxy(40,4);
+cout<<"Phone No.2";
+gotoxy(52,4);
+cout<<"Occupation";
+r=6;
+}
+}
+}
+file.close();
+textbackground(GREEN);
+textcolor(WHITE);
+clrscr();
+
+if(found==0)
+{ textbackground(BLACK);
+textcolor(RED);
+clrscr();
+
+cout<<"\n record not found";
+}
+getch();
+}
+
+void update()
+{
+fstream file;
+file.open("phone.dat",ios::in|ios::out|ios::binary);
+if(!file)
+{
+cout<<"\nI/O Error";
+getch();
+exit(0);
+}   char nm[20];
+textbackground(GREEN);
+textcolor(WHITE);
+clrscr();
+
+cout<<"\n enter name";
+cin>>nm;
+file.seekg(0,ios::beg);
+int found=0;
+int cnt=0;
+while(file.read((char*)&rec, sizeof(rec)))
+{
+cnt++;
+if(strcmpi(nm,rec.getname())==0)
+{found=1;
+break;}}
+
+if(found==0)
+cout<<"\n record not found";
+else
+{
+char ch[26], telno[11],telno2[11],passw[20];
+int location=(cnt-1)*sizeof(rec);
+cout<<"\n Enter your password";
+gets(passw);
+if(strcmp(passw,rec.getpass())==0)
+{
+cout<<"\n Enter new telephone no.(if you want to change your first number if not then press enter)";
+gets(telno);
+cout<<"\n Enter new telephone no.2(if you want to change your second number if not then press enter)";
+gets(telno2);
+rec.update(nm,telno,telno2);
+file.seekp(location,ios::beg);
+file.write((char*)&rec,sizeof(rec));
+file.flush();
+}else
+{
+cout<<"\n Sorry wrong password.........\n Terminating!!!!!";
+getch();
+exit(0);
+}}
+file.close();
+getch();
+}
+
+void welcome()
+{
+textbackground(YELLOW);
+textcolor(BLACK+BLINK);
+clrscr();
+int r = 5;
+gotoxy(14,r++);
+cprintf("# # # # # # # # # # # # # # # # # # # # # # # # # # #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#               P R O J E C T   W O R K             #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#                         O N                       #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#              Y E L L O W    P A G E S             #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("#                        Developed By               #");
+gotoxy(14,r++);
+cprintf("#                           Padam Banthia           #");
+gotoxy(14,r++);
+cprintf("#                               XII-A               #");
+gotoxy(14,r++);
+cprintf("#                          Roll No.:-2659849        #");
+gotoxy(14,r++);
+cprintf("#                                                   #");
+gotoxy(14,r++);
+cprintf("# # # # # # # # # # # # # # # # # # # # # # # # # # #");
+
+getch();
+}
